@@ -77,62 +77,81 @@ I2C::I2C(uint8_t bus, bool is_master, uint8_t slave_addr) {
 #endif
 }
 
-void I2C::MasterSend(int value) {
+void I2C::MasterSend(int array[], int size) {
 
-  uint16_t x = map(value, -32767, 32768, 0, 65535);
-  uint16_t high = highByte(x);
-  uint16_t low = lowByte(x);
+  // uint16_t x = map(value, -32767, 32768, 0, 65535);
+  // uint16_t high = highByte(x);
+  // uint16_t low = lowByte(x);
+  // i2c->beginTransmission(slave_addr);
+  // i2c->write(high);
+  // i2c->write(low);
+  // i2c->endTransmission();
+
   i2c->beginTransmission(slave_addr);
-  i2c->write(high);
-  i2c->write(low);
+  i2c->write((byte*)array, size*sizeof(int));
   i2c->endTransmission();
 }
 
-int I2C::SlaveReceive() {
+void I2C::SlaveReceive(int array[], int size) {
 
-  if (i2c->available() >= 2) {
-    uint16_t high = i2c->read();
-    uint16_t low = i2c->read();
-    uint16_t result = (high << 8) | low;
-    int z = map(result, 0, 65535, -32767, 32768);
+  // if (i2c->available() >= 2) {
+  //   uint16_t high = i2c->read();
+  //   uint16_t low = i2c->read();
+  //   uint16_t result = (high << 8) | low;
+  //   int z = map(result, 0, 65535, -32767, 32768);
 
-    if (z >= 0) {
+  //   if (z >= 0) {
 
-      z = z + 1;
-    }
+  //     z = z + 1;
+  //   }
 
-    return z;
-  }
+  //   return z;
+  // }
+
+i2c->readBytes((byte*)array, sizeof(int)*size); 
+
 }
 
 
-int I2C::MasterReceive() {
+void I2C::MasterReceive(int array[], int size) {
 
-  i2c->requestFrom(slave_addr, 2);
+  // i2c->requestFrom(slave_addr, 2);
 
-  if (i2c->available() >= 2) {
+  // if (i2c->available() >= 2) {
 
-    uint16_t high = i2c->read();
-    uint16_t low = i2c->read();
-    uint16_t result = (high << 8) | low;
-    int z = map(result, 0, 65535, -32767, 32768);
+  //   uint16_t high = i2c->read();
+  //   uint16_t low = i2c->read();
+  //   uint16_t result = (high << 8) | low;
+  //   int z = map(result, 0, 65535, -32767, 32768);
 
-    if (z >= 0) {
+  //   if (z >= 0) {
 
-      z = z + 1;
-    }
+  //     z = z + 1;
+  //   }
 
-    return z;
-  }
+  //   return z;
+  // }
+
+  i2c->requestFrom(slave_addr, size*sizeof(int));
+
+  if (i2c->available() >= size*sizeof(int)) {
+  i2c->readBytes((byte*)array, sizeof(int)*size); 
 }
 
-void I2C::SlaveSend(int value) {
+}
 
-  uint16_t x = map(value, -32767, 32768, 0, 65535);
+void I2C::SlaveSend(int array[], int size) {
+
+ /*uint16_t x = map(value, -32767, 32768, 0, 65535);
   uint16_t high = highByte(x);
   uint16_t low = lowByte(x);
   i2c->write(high);
-  i2c->write(low);
+  i2c->write(low);*/
+
+
+  i2c->write((byte*)array, sizeof(int)*size);
+
+
 }
 
 /*void UART::init(int rx, int tx, unsigned long baudRate ){
