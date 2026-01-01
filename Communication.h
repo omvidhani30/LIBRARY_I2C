@@ -12,14 +12,13 @@ class I2C{
 
   public:
 
-  I2C(uint8_t bus,bool is_master, uint8_t slave_addr);
-  void MasterSend( int value);
-  int SlaveReceive();
-  int MasterReceive();
-  void SlaveSend(int value);
+  I2C(uint8_t bus, bool is_master, uint8_t slave_addr);
+  void MasterSend(int array[], int size);
+  void SlaveReceive(int data[], int size);
+  void I2C::MasterReceive(int array[], int size);
+  void I2C::SlaveSend(int array[], int size);
 
 };
-
 
 class UART{
 
